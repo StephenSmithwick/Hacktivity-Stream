@@ -4,10 +4,33 @@
 
 li.commit {
     margin: 10px 0;
+    padding-top: 2px;
+    border-top: 1px solid #999;
+    clear: both;
 }
 
 li.commit .author {
     background-image: url("default-avatar.jpg");
     background-repeat: no-repeat;
-    height: 128px;
+    padding: 102px 5px 0px 0px;
+    width: 102px;
+    float: left;
+}
+
+li.commit .date {
+    position: relative;
+    float:right;
+    top: -2px;
+    border: 1px solid #999;
+    border-top: none;
+    padding: 3px;
+    background: #aaa;
+    /*Rounded corners*/
+    border-radius: 0px 0px 3px 3px;
+}
+
+li.commit .svn {
+    clear: left;
+    margin-left: 40px;
+    padding-top: 20px;
 }

@@ -1,16 +1,13 @@
 <html>
-<head>
-  <%= stylesheet_link_tag "style" %>
-</head>
 <body>
 
 <ul id="commits">
   <% @commits.each do |commit| %>
       <li class="commit">
         <div class="author"><%= commit[:author] %></div>
-        <div class="date"><%= commit[:date] %></div>
-        <div class="svn"><%= commit[:svn_rev] %></div>
-        <div class="message"><%= commit[:message] %></div>
+        <span class="date"><%= commit[:date] %></span>
+        <span class="message"><%= commit[:message] %></span>
+        <div class="svn"><span class="label">svn:</span> <%= commit[:svn_rev] %></div>
       </li>
   <% end %>
 </ul>
