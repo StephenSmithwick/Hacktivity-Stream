@@ -1,3 +1,13 @@
 #commits {
     list-style: none;
 }
+
+li.commit {
+    margin: 10px 0;
+}
+
+li.commit .author {
+    background-image: url("default-avatar.jpg");
+    background-repeat: no-repeat;
+    height: 128px;
+}
