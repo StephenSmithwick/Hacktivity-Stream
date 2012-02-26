@@ -1,1 +1,5 @@
-hello world
+<% @commits.each do |commit| %>
+    <p>    <%= commit[:author] %> - <%= commit[:date] %> - <%= commit[:svn_rev] %> - <%= commit[:message] %>
+
+    </p>
+<% end %>
