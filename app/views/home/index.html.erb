@@ -5,7 +5,7 @@
   <% @commits.each do |commit| %>
       <li class="commit">
         <div class="author"><%= commit[:author] %></div>
-        <span class="date"><%= commit[:date] %></span>
+        <span class="date"><%= "#{distance_of_time_in_words_to_now commit[:date]} ago" %></span>
         <span class="message"><%= commit[:message] %></span>
         <div class="svn"><span class="label">svn:</span> <%= commit[:svn_rev] %></div>
       </li>
