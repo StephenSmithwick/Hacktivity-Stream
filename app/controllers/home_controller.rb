@@ -8,7 +8,7 @@ class HomeController < ApplicationController
   def find_commits()
     repo = Grit::Repo.new("~/hacktivity-git-repos")
 
-    commits = repo.commits('master', 300).map do |commit|
+    commits = repo.commits('master', 50).map do |commit|
       {:author => commit.author.name,
        :date => commit.committed_date,
        :message => trim_git_svn_msg(commit.message),

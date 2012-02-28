@@ -1,36 +1,48 @@
+body {
+    font-size: 18px;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue";
+    margin-right: 0;
+}
+
 #commits {
     list-style: none;
 }
 
 li.commit {
-    margin: 10px 0;
-    padding-top: 2px;
-    border-top: 1px solid #999;
+    padding: 1.4em 0 1.4em 1.4em;
+    border-bottom: 1px solid #E6E6E6;
     clear: both;
 }
 
 li.commit .author {
-    background-image: url("default-avatar.jpg");
-    background-repeat: no-repeat;
-    padding: 102px 5px 0px 0px;
     width: 102px;
     float: left;
+    color: #29ABE2;
+    font-size: 1.6em;
+    font-weight: bold;
 }
 
 li.commit .date {
+    color: #29ABE2;
+    background: #F2F2F2;
+    font-size: 0.76em;
+    padding: 0.4em 1.4em;
+    min-width: 10em;
     position: relative;
     float:right;
-    top: -2px;
-    border: 1px solid #999;
-    border-top: none;
-    padding: 3px;
-    background: #aaa;
+    height: 24px;
+    line-height: 24px;
     /*Rounded corners*/
-    border-radius: 0px 0px 3px 3px;
+    border-radius: 24px 0px 0px 24px;
 }
 
 li.commit .svn {
+    font-size: 0.7em;
     clear: left;
-    margin-left: 40px;
-    padding-top: 20px;
+    margin: 20px 0 0 0;
+}
+
+li.commit .message {
+    color: #666666;
+    margin-left: 150px;
 }
