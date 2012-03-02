@@ -58,6 +58,7 @@ GEM
     mime-types (1.17.2)
     multi_json (1.0.4)
     polyglot (0.3.3)
+    posix-spawn (0.3.6)
     rack (1.4.1)
     rack-cache (1.1)
       rack (>= 0.4)
@@ -110,6 +111,7 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   grit
   jquery-rails
+  posix-spawn
   rails (= 3.2.1)
   sass-rails (~> 3.2.3)
   sqlite3

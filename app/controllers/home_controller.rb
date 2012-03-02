@@ -1,12 +1,16 @@
 require 'grit'
+require 'posix-spawn'
 
 class HomeController < ApplicationController
   def index
     @commits = find_commits().reject {|commit| commit[:author] == "bamboo"}
   end
 
-  def find_commits()
-    repo = Grit::Repo.new("~/hacktivity-git-repos")
+  def find_commits
+    repo_dir = "~/hacktivity-git-repos"
+    git_svn_rebase repo_dir
+
+    repo = Grit::Repo.new(repo_dir)
 
     commits = repo.commits('master', 50).map do |commit|
       {:author => commit.author.name,
@@ -17,6 +21,12 @@ class HomeController < ApplicationController
     end
   end
 
+  def git_svn_rebase repo_dir
+    pid = POSIX::Spawn::spawn 'git svn rebase', :chdir => File.expand_path(repo_dir)
+    # uncomment the line below to wait for svn rebase to complete
+    # Process::waitpid(pid)
+  end
+    
   def trim_git_svn_msg(commit_msg)
     commit_msg.gsub(/\n\ngit\-svn\-id\: .*$/m, "")
   end
