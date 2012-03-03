@@ -20,6 +20,7 @@ li.commit .author {
     color: #29ABE2;
     font-size: 1.6em;
     font-weight: bold;
+    font-family: "HelveticaNeue-CondensedBold", "Helvetica Neue";
 }
 
 li.commit .date {
