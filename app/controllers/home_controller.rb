@@ -3,7 +3,7 @@ require 'posix-spawn'
 
 class HomeController < ApplicationController
   def index
-    @commits = find_commits().reject {|commit| commit[:author] == "bamboo"}
+    @commits = find_commits().reject { |commit| commit[:author] == "bamboo" }
   end
 
   def find_commits
@@ -11,12 +11,14 @@ class HomeController < ApplicationController
     git_svn_rebase repo_dir
 
     repo = Grit::Repo.new(repo_dir)
+    branch = repo.head.name
 
-    commits = repo.commits('master', 50).map do |commit|
-      {:author => commit.author.name,
-       :date => commit.committed_date,
-       :message => trim_git_svn_msg(commit.message),
-       :svn_rev => svn_revision(commit.message)
+    commits = repo.commits(branch, 50).map do |commit|
+      {
+          :author => commit.author.name,
+          :date => commit.committed_date,
+          :message => trim_git_svn_msg(commit.message),
+          :svn_rev => svn_revision(commit.message)
       }
     end
   end
@@ -26,7 +28,7 @@ class HomeController < ApplicationController
     # uncomment the line below to wait for svn rebase to complete
     # Process::waitpid(pid)
   end
-    
+
   def trim_git_svn_msg(commit_msg)
     commit_msg.gsub(/\n\ngit\-svn\-id\: .*$/m, "")
   end
