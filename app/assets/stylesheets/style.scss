@@ -1,11 +1,15 @@
+$blue: #29ABE2;
+
 body {
     font-size: 18px;
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue";
-    margin-right: 0;
+    margin: 0 0 0 0;
 }
 
 #commits {
     list-style: none;
+    padding: 0 0 0 20px;
+    margin: 0 0 0 0;
 }
 
 li.commit {
@@ -17,14 +21,14 @@ li.commit {
 li.commit .author {
     width: 102px;
     float: left;
-    color: #29ABE2;
+    color: $blue;
     font-size: 1.6em;
     font-weight: bold;
     font-family: "HelveticaNeue-CondensedBold", "Helvetica Neue";
 }
 
 li.commit .date {
-    color: #29ABE2;
+    color: $blue;
     background: #F2F2F2;
     font-size: 0.76em;
     padding: 0.4em 1.4em;
@@ -40,10 +44,10 @@ li.commit .date {
 li.commit .svn {
     font-size: 0.7em;
     clear: left;
-    margin: 20px 0 0 0;
+    margin: 0 0 0 0;
 }
 
 li.commit .message {
     color: #666666;
-    margin-left: 150px;
+    margin: 0 10em 0 10em;
 }

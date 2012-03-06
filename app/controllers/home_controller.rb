@@ -24,7 +24,7 @@ class HomeController < ApplicationController
   end
 
   def git_svn_rebase repo_dir
-    pid = POSIX::Spawn::spawn 'git svn rebase', :chdir => File.expand_path(repo_dir)
+    # pid = POSIX::Spawn::spawn 'git svn rebase', :chdir => File.expand_path(repo_dir)
     # uncomment the line below to wait for svn rebase to complete
     # Process::waitpid(pid)
   end
@@ -34,7 +34,9 @@ class HomeController < ApplicationController
   end
 
   def svn_revision(commit_msg)
-    commit_msg.match(/git-svn-id: .+@(\d+) /)[1]
+    commit_msg.match(/git-svn-id: .+@(\d+) /) { |capture_groups|
+        capture_groups.length > 1 ? capture_groups[1] : ''
+    }
   end
 
 

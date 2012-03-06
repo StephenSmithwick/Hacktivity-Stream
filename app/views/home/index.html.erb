@@ -3,8 +3,8 @@
       <li class="commit">
         <div class="author"><%= commit[:author] %></div>
         <div class="date"><%= "#{distance_of_time_in_words_to_now commit[:date]} ago" %></div>
-        <div class="message"><span><%= commit[:message] %></span></div>
-        <div class="svn"><span class="label">svn:</span> <%= commit[:svn_rev] %></div>
+        <div class="message"><%= commit[:message] %></div>
+        <div class="svn">svn: <%= commit[:svn_rev] %></div>
       </li>
   <% end %>
 </ul>
