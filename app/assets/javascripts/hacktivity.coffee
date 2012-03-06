@@ -10,7 +10,7 @@ $(document).ready(->
 
 
 consumeNewCommit = () ->
-    if commits.length === 0
+    if commits.length == 0
         return
 
     commit = commits.shift()
