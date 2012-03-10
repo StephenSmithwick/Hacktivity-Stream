@@ -1,6 +1,7 @@
 <ul id="commits">
   <% @commits.each do |commit| %>
       <li class="commit">
+        <p class="id"><%= commit[:id] %></p>
         <div class="author"><%= commit[:author] %></div>
         <div class="date"><%= "#{distance_of_time_in_words_to_now commit[:date]} ago" %></div>
         <div class="message"><%= commit[:message] %></div>

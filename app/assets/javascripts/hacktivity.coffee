@@ -46,7 +46,11 @@ removeBottomCommit = () ->
 consumer = new Consumer
 
 poll = () ->
-    newCommits = commits
+    last_known_commit = $('#commits .commit:first-child .id').text()
+    newCommits = $.ajax({
+        url: '/newcommits',
+        data: {last_known_commit: last_known_commit}
+    })
     if newCommits.length > 0
         consumer.add newCommits
     consumer.consume()

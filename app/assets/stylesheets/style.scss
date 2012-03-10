@@ -18,6 +18,10 @@ li.commit {
     clear: both;
 }
 
+li.commit .id {
+    display: none;
+}
+
 li.commit .author {
     width: 102px;
     float: left;

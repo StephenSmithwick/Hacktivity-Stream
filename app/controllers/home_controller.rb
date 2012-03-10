@@ -6,6 +6,17 @@ class HomeController < ApplicationController
     @commits = find_commits().reject { |commit| commit[:author] == "bamboo" }
   end
 
+  def newcommits
+    repo_dir = "~/hacktivity-git-repos"
+    git_svn_rebase repo_dir
+
+    repo = Grit::Repo.new(repo_dir)
+    last_known_commit = params[:last_known_commit]
+    new_commits = repo.commits_between last_known_commit, repo.commits.first
+    
+    render :json => to_hash(new_commits)
+  end
+
   def find_commits
     repo_dir = "~/hacktivity-git-repos"
     git_svn_rebase repo_dir
@@ -13,14 +24,19 @@ class HomeController < ApplicationController
     repo = Grit::Repo.new(repo_dir)
     branch = repo.head.name
 
-    commits = repo.commits(branch, 50).map do |commit|
-      {
-          :author => commit.author.name,
-          :date => commit.committed_date,
-          :message => trim_git_svn_msg(commit.message),
-          :svn_rev => svn_revision(commit.message)
-      }
-    end
+    to_hash repo.commits(branch, 50)
+  end
+
+  def to_hash commits
+      commits.map do |commit|
+          {
+              :id => commit.id,
+              :author => commit.author.name,
+              :date => commit.committed_date,
+              :message => trim_git_svn_msg(commit.message),
+              :svn_rev => svn_revision(commit.message)
+          }
+      end
   end
 
   def git_svn_rebase repo_dir
