@@ -4,17 +4,20 @@ commits = [
 ]
 
 
-$(document).ready(->
-    consumeNewCommit()
-)
+class Consumer
+    constructor: () ->
+        @commits = []
 
+    add: (newCommits) ->
+        @commits.push commit for commit in newCommits
 
-consumeNewCommit = () ->
-    if commits.length == 0
-        return
-
-    commit = commits.shift()
-    addCommit(commit, consumeNewCommit)
+    consume: () ->
+        if @commits.length == 0
+           return
+        self = this
+        addCommit(@commits.shift(), () ->
+            self.consume()
+        )
 
 
 addCommit = (commit, onComplete) ->
@@ -34,8 +37,21 @@ addCommit = (commit, onComplete) ->
     $newCommit.css('margin-top', -height)
     $newCommit.animate {'margin-top': 0}, {duration: 1000, complete: onComplete}
 
-    removeBottomCommit
+    removeBottomCommit()
 
 
 removeBottomCommit = () ->
     $('#commits .commit:last-child').remove()
+
+consumer = new Consumer
+
+poll = () ->
+    newCommits = commits
+    if newCommits.length > 0
+        consumer.add newCommits
+    consumer.consume()
+
+
+$(document).ready(->
+    setInterval(poll, 3000)
+)
