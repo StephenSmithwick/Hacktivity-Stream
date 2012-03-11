@@ -25,7 +25,7 @@ addCommit = (commit, onComplete) ->
     $author = $("<div>#{commit.author}</div>").addClass('author')
     $date = $("<div>#{commit.date}</div>").addClass("date")
     $message = $("<div>#{commit.message}</div>").addClass("message")
-    $svn = $("<div>#{commit.svn}</div>").addClass("svn")
+    $svn = $("<div>svn: #{commit.svn}</div>").addClass("svn")
 
     $newCommit.append($author)
     $newCommit.append($date)

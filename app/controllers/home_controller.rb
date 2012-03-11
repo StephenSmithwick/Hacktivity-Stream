@@ -2,6 +2,8 @@ require 'grit'
 require 'posix-spawn'
 
 class HomeController < ApplicationController
+  include ActionView::Helpers::DateHelper 
+  
   def index
     @commits = find_commits().reject { |commit| commit[:author] == "bamboo" }
   end
@@ -31,9 +33,9 @@ class HomeController < ApplicationController
           {
               :id => commit.id,
               :author => commit.author.name,
-              :date => commit.committed_date,
+              :date => "#{distance_of_time_in_words_to_now(commit.committed_date)} ago",
               :message => trim_git_svn_msg(commit.message),
-              :svn_rev => svn_revision(commit.message)
+              :svn => svn_revision(commit.message)
           }
       end
   end
