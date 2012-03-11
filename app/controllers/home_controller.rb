@@ -8,12 +8,11 @@ class HomeController < ApplicationController
 
   def newcommits
     repo_dir = "~/hacktivity-git-repos"
-    git_svn_rebase repo_dir
 
     repo = Grit::Repo.new(repo_dir)
     last_known_commit = params[:last_known_commit]
-    new_commits = repo.commits_between last_known_commit, repo.commits.first
-    
+    branch = repo.head.name
+    new_commits = repo.commits_between last_known_commit, repo.commits(branch).first
     render :json => to_hash(new_commits)
   end
 

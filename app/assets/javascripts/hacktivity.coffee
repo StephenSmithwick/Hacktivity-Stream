@@ -47,13 +47,15 @@ consumer = new Consumer
 
 poll = () ->
     last_known_commit = $('#commits .commit:first-child .id').text()
-    newCommits = $.ajax({
+    $.ajax({
         url: '/newcommits',
-        data: {last_known_commit: last_known_commit}
+        data: {last_known_commit: last_known_commit},
+        dataType: 'json',
+        success: (newCommits) ->
+            if newCommits.length > 0
+                consumer.add newCommits
+            consumer.consume()
     })
-    if newCommits.length > 0
-        consumer.add newCommits
-    consumer.consume()
 
 
 $(document).ready(->
