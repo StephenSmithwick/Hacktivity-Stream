@@ -1,11 +1,15 @@
 require 'grit'
 require 'posix-spawn'
 
+
 class HomeController < ApplicationController
-  include ActionView::Helpers::DateHelper 
   
   def index
-    @commits = find_commits().reject { |commit| commit[:author] == "bamboo" }
+    repo_dir = "~/hacktivity-git-repos"
+    repo = Grit::Repo.new(repo_dir)
+    branch = repo.head.name
+
+    @commits = to_json repo.commits(branch, 50)
   end
 
   def newcommits
@@ -14,31 +18,14 @@ class HomeController < ApplicationController
     repo = Grit::Repo.new(repo_dir)
     last_known_commit = params[:last_known_commit]
     branch = repo.head.name
-    new_commits = repo.commits_between last_known_commit, repo.commits(branch).first
-    render :json => to_hash(new_commits)
+    new_commits = repo.commits_between last_known_commit, repo.latest_commit
+    render :json => to_json(new_commits)
   end
 
-  def find_commits
-    repo_dir = "~/hacktivity-git-repos"
-    git_svn_rebase repo_dir
-
-    repo = Grit::Repo.new(repo_dir)
-    branch = repo.head.name
-
-    to_hash repo.commits(branch, 50)
+  def to_json commits
+      commits.reject { |commit| commit.is_bamboo? } .map { |commit| commit.to_json }
   end
 
-  def to_hash commits
-      commits.map do |commit|
-          {
-              :id => commit.id,
-              :author => commit.author.name,
-              :date => "#{distance_of_time_in_words_to_now(commit.committed_date)} ago",
-              :message => trim_git_svn_msg(commit.message),
-              :svn => svn_revision(commit.message)
-          }
-      end
-  end
 
   def git_svn_rebase repo_dir
     # pid = POSIX::Spawn::spawn 'git svn rebase', :chdir => File.expand_path(repo_dir)
@@ -46,15 +33,49 @@ class HomeController < ApplicationController
     # Process::waitpid(pid)
   end
 
-  def trim_git_svn_msg(commit_msg)
-    commit_msg.gsub(/\n\ngit\-svn\-id\: .*$/m, "")
-  end
-
-  def svn_revision(commit_msg)
-    commit_msg.match(/git-svn-id: .+@(\d+) /) { |capture_groups|
-        capture_groups.length > 1 ? capture_groups[1] : ''
-    }
-  end
 
 
+
+end
+
+module CommitMixin
+    def is_bamboo?
+        self.author.name == 'bamboo'
+    end
+
+    def to_json
+        {
+            :id => self.id,
+            :author => self.author.name,
+            :date => "#{distance_of_time_in_words_to_now(self.committed_date)} ago",
+            :message => trim_git_svn_msg(self.message),
+            :svn => self.svn_revision
+        }
+    end
+
+    def svn_revision
+        self.message.match(/git-svn-id: .+@(\d+) /) { |capture_groups|
+            capture_groups.length > 1 ? capture_groups[1] : ''
+        }
+    end
+
+    def trim_git_svn_msg(commit_msg)
+        commit_msg.gsub(/\n\ngit\-svn\-id\: .*$/m, "")
+    end
+end
+
+class Grit::Commit
+    include ActionView::Helpers::DateHelper 
+    include CommitMixin
+end
+
+module RepoMixin
+    def latest_commit
+        branch = self.head.name
+        self.commits(branch).first
+    end
+end
+
+class Grit::Repo
+    include RepoMixin
 end
