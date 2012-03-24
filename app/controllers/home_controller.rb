@@ -6,15 +6,14 @@ class HomeController < ApplicationController
   
   def index
     repo = Grit::Repo.new(ENV["REPO_DIR"])
-    branch = repo.head.name
+    head = repo.my_branch
 
-    @commits = to_json repo.commits(branch, 50)
+    @commits = to_json repo.commits(head.name, 50)
   end
 
   def newcommits
     repo = Grit::Repo.new(ENV["REPO_DIR"])
     last_known_commit = params[:last_known_commit]
-    branch = repo.head.name
     new_commits = repo.commits_between last_known_commit, repo.latest_commit
     render :json => to_json(new_commits)
   end
@@ -22,17 +21,6 @@ class HomeController < ApplicationController
   def to_json commits
       commits.reject { |commit| commit.is_bamboo? } .map { |commit| commit.to_json }
   end
-
-
-  def git_svn_rebase repo_dir
-    # pid = POSIX::Spawn::spawn 'git svn rebase', :chdir => File.expand_path(repo_dir)
-    # uncomment the line below to wait for svn rebase to complete
-    # Process::waitpid(pid)
-  end
-
-
-
-
 end
 
 module CommitMixin
@@ -62,14 +50,17 @@ module CommitMixin
 end
 
 class Grit::Commit
-    include ActionView::Helpers::DateHelper 
+    include ActionView::Helpers::DateHelper
     include CommitMixin
 end
 
 module RepoMixin
     def latest_commit
-        branch = head.name
-        commits(branch).first
+        commits(my_branch.name).first
+    end
+
+    def my_branch
+      head || branches[0]
     end
 end
 
