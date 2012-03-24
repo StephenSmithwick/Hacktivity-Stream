@@ -3,12 +3,15 @@ require 'posix-spawn'
 
 
 class HomeController < ApplicationController
-  
+
   def index
     repo = Grit::Repo.new(ENV["REPO_DIR"])
     head = repo.my_branch
 
     @commits = to_json repo.commits(head.name, 50)
+  end
+
+  def sidebar
   end
 
   def newcommits
@@ -19,51 +22,68 @@ class HomeController < ApplicationController
   end
 
   def to_json commits
-      commits.reject { |commit| commit.is_bamboo? } .map { |commit| commit.to_json }
+    commits.reject { |commit| commit.is_bamboo? }.map { |commit| commit.to_json }
   end
 end
 
 module CommitMixin
-    def is_bamboo?
-        self.author.name == 'bamboo'
-    end
+  def is_bamboo?
+    self.author.name == 'bamboo'
+  end
 
-    def to_json
-        {
-            :id => id,
-            :author => author.name,
-            :date => "#{distance_of_time_in_words_to_now(self.committed_date)} ago",
-            :message => trim_git_svn_msg(self.message),
-            :svn => svn_revision
-        }
-    end
+  def to_json
+    {
+        :id => id,
+        :author => author.name,
+        :date => "#{distance_of_time_in_words_to_now(self.committed_date)} ago",
+        :message => trim_git_svn_msg(self.message),
+        :svn => svn_revision,
+        :avatar_img => avatar_img
+    }
+  end
 
-    def svn_revision
-        message.match(/git-svn-id: .+@(\d+) /) { |capture_groups|
-            capture_groups.length > 1 ? capture_groups[1] : ''
-        }
-    end
+  def svn_revision
+    message.match(/git-svn-id: .+@(\d+) /) { |capture_groups|
+      capture_groups.length > 1 ? capture_groups[1] : ''
+    }
+  end
 
-    def trim_git_svn_msg(commit_msg)
-        commit_msg.gsub(/\n\ngit\-svn\-id\: .*$/m, "")
-    end
+  def trim_git_svn_msg(commit_msg)
+    commit_msg.gsub(/\n\ngit\-svn\-id\: .*$/m, "")
+  end
+
+  def avatar_img
+    return 'brainstorming.png' if author.name == 'stephens'
+    return 'process.png' if author.name == 'rens'
+
+    return ["business-contact.png",
+     "config.png",
+     "free-for-job.png",
+     "future-projects.png",
+     "hire-me.png",
+     "illustration.png",
+     "lightbulb.png",
+     "my-account.png",
+     "product-163.png",
+     "user.png"].sample
+  end
 end
 
 class Grit::Commit
-    include ActionView::Helpers::DateHelper
-    include CommitMixin
+  include ActionView::Helpers::DateHelper
+  include CommitMixin
 end
 
 module RepoMixin
-    def latest_commit
-        commits(my_branch.name).first
-    end
+  def latest_commit
+    commits(my_branch.name).first
+  end
 
-    def my_branch
-      head || branches[0]
-    end
+  def my_branch
+    head || branches[0]
+  end
 end
 
 class Grit::Repo
-    include RepoMixin
+  include RepoMixin
 end

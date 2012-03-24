@@ -4,6 +4,7 @@ HacktivityStream::Application.routes.draw do
 
   # Sample of regular route:
   match 'newcommits' => 'home#newcommits'
+  match 'sidebar' => 'home#sidebar'
   # Keep in mind you can assign values other than :controller and :action
 
   # Sample of named route:

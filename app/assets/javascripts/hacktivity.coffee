@@ -22,11 +22,13 @@ class Consumer
 
 addCommit = (commit, onComplete) ->
     $newCommit = $("<li></li>").addClass('commit')
+    $avatar = $("<div><image src='assets/avatar/#{commit.avatar_img}'></image></div>").addClass('avatar')
     $author = $("<div>#{commit.author}</div>").addClass('author')
     $date = $("<div>#{commit.date}</div>").addClass("date")
     $message = $("<div>#{commit.message}</div>").addClass("message")
     $svn = $("<div>svn: #{commit.svn}</div>").addClass("svn")
 
+    $newCommit.append($avatar)
     $newCommit.append($author)
     $newCommit.append($date)
     $newCommit.append($message)
@@ -59,5 +61,5 @@ poll = () ->
 
 
 $(document).ready(->
-    setInterval(poll, 3000)
+    setInterval(poll, 5000)
 )
