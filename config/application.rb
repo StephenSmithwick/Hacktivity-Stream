@@ -55,5 +55,7 @@ module HacktivityStream
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    ENV["REPO_DIR"] = "~/hacktivity-git-repos" unless ENV["REPO_DIR"]
   end
 end

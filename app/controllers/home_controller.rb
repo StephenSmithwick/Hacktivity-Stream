@@ -5,17 +5,14 @@ require 'posix-spawn'
 class HomeController < ApplicationController
   
   def index
-    repo_dir = "~/hacktivity-git-repos"
-    repo = Grit::Repo.new(repo_dir)
+    repo = Grit::Repo.new(ENV["REPO_DIR"])
     branch = repo.head.name
 
     @commits = to_json repo.commits(branch, 50)
   end
 
   def newcommits
-    repo_dir = "~/hacktivity-git-repos"
-
-    repo = Grit::Repo.new(repo_dir)
+    repo = Grit::Repo.new(ENV["REPO_DIR"])
     last_known_commit = params[:last_known_commit]
     branch = repo.head.name
     new_commits = repo.commits_between last_known_commit, repo.latest_commit
@@ -45,16 +42,16 @@ module CommitMixin
 
     def to_json
         {
-            :id => self.id,
-            :author => self.author.name,
+            :id => id,
+            :author => author.name,
             :date => "#{distance_of_time_in_words_to_now(self.committed_date)} ago",
             :message => trim_git_svn_msg(self.message),
-            :svn => self.svn_revision
+            :svn => svn_revision
         }
     end
 
     def svn_revision
-        self.message.match(/git-svn-id: .+@(\d+) /) { |capture_groups|
+        message.match(/git-svn-id: .+@(\d+) /) { |capture_groups|
             capture_groups.length > 1 ? capture_groups[1] : ''
         }
     end
@@ -71,8 +68,8 @@ end
 
 module RepoMixin
     def latest_commit
-        branch = self.head.name
-        self.commits(branch).first
+        branch = head.name
+        commits(branch).first
     end
 end
 
