@@ -2,6 +2,9 @@
   <% @commits.each do |commit| %>
       <li class="commit">
         <p class="id"><%= commit[:id] %></p>
+
+        <div class="avatar"><%= image_tag("bestseller.png") %></div>
+
         <div class="author"><%= commit[:author] %></div>
         <div class="date"><%= commit[:date] %></div>
         <div class="message"><%= commit[:message] %></div>
