@@ -3,8 +3,9 @@ HacktivityStream::Application.routes.draw do
   # first created -> highest priority.
 
   # Sample of regular route:
+  match 'commits' => 'home#commits'
   match 'newcommits' => 'home#newcommits'
-  match 'sidebar' => 'home#sidebar'
+  match 'sidebar' => 'sidebar#sidebar'
   # Keep in mind you can assign values other than :controller and :action
 
   # Sample of named route:

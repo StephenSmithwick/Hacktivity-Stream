@@ -1,9 +1,3 @@
-commits = [
-    {author: 'Ren', date: 'just now', message: 'commit message', svn: 'svn: 9999'},
-    {author: 'Stephen', date: 'just now', message: 'commit message', svn: 'svn: 10000'}
-]
-
-
 class Consumer
     constructor: () ->
         @commits = []
@@ -15,43 +9,50 @@ class Consumer
         if @commits.length == 0
            return
         self = this
-        addCommit(@commits.shift(), () ->
+        addCommitWithAnimation(@commits.shift(), () ->
             self.consume()
         )
 
 
-addCommit = (commit, onComplete) ->
+addCommit = (commit) ->
     $newCommit = $("<li></li>").addClass('commit')
+    $id = $("<p>#{commit.id}</p>").addClass('id')
     $avatar = $("<div><image src='assets/avatar/#{commit.avatar_img}'></image></div>").addClass('avatar')
     $author = $("<div>#{commit.author}</div>").addClass('author')
-    $date = $("<div>#{commit.date}</div>").addClass("date")
+    $date = $("<div></div>").addClass("date timeago").attr('title', commit.date)
+    $date.timeago()
     $message = $("<div>#{commit.message}</div>").addClass("message")
-    $svn = $("<div>svn: #{commit.svn}</div>").addClass("svn")
+    $svn = $("<div>svn: #{commit.svn || ''}</div>").addClass("svn")
 
+    $newCommit.append($id)
     $newCommit.append($avatar)
     $newCommit.append($author)
     $newCommit.append($date)
     $newCommit.append($message)
     $newCommit.append($svn)
-
     $('#commits').prepend($newCommit)
+    return $newCommit
+
+
+addCommitWithAnimation = (commit, onComplete) ->
+    $newCommit = addCommit(commit)
     height = $newCommit.outerHeight()
     $newCommit.css('margin-top', -height)
     $newCommit.animate {'margin-top': 0}, {duration: 1000, complete: onComplete}
 
-    removeBottomCommit()
-
 
 removeBottomCommit = () ->
     $('#commits .commit:last-child').remove()
-
+    
+   
 consumer = new Consumer
 
 poll = () ->
-    last_known_commit = $('#commits .commit:first-child .id').text()
+    lastKnownCommit = $('#commits .commit:first-child .id').text()
+    return unless lastKnownCommit
     $.ajax({
         url: '/newcommits',
-        data: {last_known_commit: last_known_commit},
+        data: {last_known_commit: lastKnownCommit},
         dataType: 'json',
         success: (newCommits) ->
             if newCommits.length > 0
@@ -61,5 +62,12 @@ poll = () ->
 
 
 $(document).ready(->
+    $.ajax({
+        url: '/commits',
+        data: {max: 50},
+        dataType: 'json',
+        success: (commits) ->
+            addCommit(commit) for commit in commits
+    })
     setInterval(poll, 5000)
 )

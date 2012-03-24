@@ -5,14 +5,16 @@ require 'posix-spawn'
 class HomeController < ApplicationController
 
   def index
-    repo = Grit::Repo.new(ENV["REPO_DIR"])
-    head = repo.my_branch
-
-    @commits = to_json repo.commits(head.name, 50)
   end
 
-  def sidebar
+  def commits
+      repo = Grit::Repo.new(ENV["REPO_DIR"])
+      head = repo.my_branch
+      commits = repo.commits(head.name, params[:max].to_i).reverse
+
+      render :json => to_json(commits)
   end
+
 
   def newcommits
     repo = Grit::Repo.new(ENV["REPO_DIR"])
@@ -35,7 +37,7 @@ module CommitMixin
     {
         :id => id,
         :author => author.name,
-        :date => "#{distance_of_time_in_words_to_now(self.committed_date)} ago",
+        :date => self.committed_date,
         :message => trim_git_svn_msg(self.message),
         :svn => svn_revision,
         :avatar_img => avatar_img
@@ -70,7 +72,6 @@ module CommitMixin
 end
 
 class Grit::Commit
-  include ActionView::Helpers::DateHelper
   include CommitMixin
 end
 

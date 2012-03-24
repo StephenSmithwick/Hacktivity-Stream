@@ -1,15 +1,3 @@
 <ul id="commits">
-  <% @commits.each do |commit| %>
-      <li class="commit">
-        <p class="id"><%= commit[:id] %></p>
-
-        <div class="avatar"><%= image_tag("avatar/" + commit[:avatar_img]) %></div>
-
-        <div class="author"><%= commit[:author] %></div>
-        <div class="date"><%= commit[:date] %></div>
-        <div class="message"><%= commit[:message] %></div>
-        <div class="svn">svn: <%= commit[:svn] %></div>
-      </li>
-  <% end %>
 </ul>
 
