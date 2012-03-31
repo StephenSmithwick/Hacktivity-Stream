@@ -22,6 +22,7 @@ addCommit = (commit) ->
     $date = $("<div></div>").addClass("date timeago").attr('title', commit.date)
     $date.timeago()
     $message = $("<div>#{commit.message}</div>").addClass("message")
+    $diff = createDiffBlock(commit.additions, commit.deletions)
     $svn = $("<div>svn: #{commit.svn || ''}</div>").addClass("svn")
 
     $newCommit.append($id)
@@ -29,9 +30,18 @@ addCommit = (commit) ->
     $newCommit.append($author)
     $newCommit.append($date)
     $newCommit.append($message)
+    $newCommit.append($diff)
     $newCommit.append($svn)
     $('#commits').prepend($newCommit)
     return $newCommit
+
+createDiffBlock = (adds, deletes) ->
+    $diff = $("<div></div>").addClass("message")
+    for i in [0..adds]
+        $diff.append($('<span></span>').addClass('addition'))
+    for i in [0..deletes]
+        $diff.append($('<span></span>').addClass('deletion'))
+    return $diff
 
 
 addCommitWithAnimation = (commit, onComplete) ->

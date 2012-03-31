@@ -34,11 +34,14 @@ module CommitMixin
   end
 
   def to_json
+    commit_stats = stats()
     {
         :id => id,
         :author => author.name,
         :date => self.committed_date,
         :message => trim_git_svn_msg(self.message),
+        :additions => commit_stats.additions,
+        :deletions => commit_stats.deletions,
         :svn => svn_revision,
         :avatar_img => avatar_img
     }

@@ -56,3 +56,22 @@ li.commit .message {
     margin: 0 13em;
     padding: 0.5em 0 0;
 }
+
+@mixin diff-symbol {
+    float: left;
+    display: block;
+    width: 10px;
+    height: 9px;
+    margin: 0 1px 1px 0;
+    border-radius: 40%;
+}
+
+li.commit .addition {
+    @include diff-symbol;
+    background-color: #56c144;
+}
+
+li.commit .deletion {
+    @include diff-symbol;
+    background-color: #cd2122;
+}
