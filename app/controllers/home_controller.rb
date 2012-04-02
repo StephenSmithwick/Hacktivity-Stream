@@ -8,10 +8,10 @@ class HomeController < ApplicationController
   end
 
   def commits
-      head = repo.my_branch
-      commits = repo.commits(head.name, params[:max].to_i).reverse
+    head = repo.my_branch
+    commits = repo.commits(head.name, params[:max].to_i).reverse
 
-      render :json => to_json(commits)
+    render :json => to_json(commits)
   end
 
   def newcommits
@@ -36,8 +36,9 @@ module CommitMixin
   end
 
   def to_json
-    author_details = commit_author;
+    author_details = commit_author
     commit_stats = stats()
+
     {
         :id => id,
         :author => author_details['name'],
@@ -66,20 +67,20 @@ module CommitMixin
   end
 
   def default_author
-    { 'name' => author.name, 'avatar' => avatar_img }
+    {'name' => author.name, 'avatar' => avatar_img}
   end
 
   def avatar_img
     return ["business-contact.png",
-     "config.png",
-     "free-for-job.png",
-     "future-projects.png",
-     "hire-me.png",
-     "illustration.png",
-     "lightbulb.png",
-     "my-account.png",
-     "product-163.png",
-     "user.png"].sample
+            "config.png",
+            "free-for-job.png",
+            "future-projects.png",
+            "hire-me.png",
+            "illustration.png",
+            "lightbulb.png",
+            "my-account.png",
+            "product-163.png",
+            "user.png"].sample
   end
 end
 
